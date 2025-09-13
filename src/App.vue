@@ -1,3 +1,15 @@
+<script setup>
+import { isLoggedIn, logout } from './auth';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+const onUserLogout = () => {
+  logout();
+  router.push('/login')
+}
+</script>
+
 <template>
   <div class="wrapper">
     <nav class="navigation">
@@ -5,6 +17,10 @@
         <RouterLink to="/dashboard">Dashboard</RouterLink>
         <RouterLink to="/tasks">Tasks</RouterLink>
         <RouterLink to="/settings">Settings</RouterLink>
+      </div>
+      <div class="navigation-right">
+        <RouterLink v-if="!isLoggedIn" to="/login">Login</RouterLink>
+        <button class="btn-logout" v-else @click="onUserLogout">Logout</button>
       </div>
     </nav>
     <main class="container">
@@ -61,7 +77,7 @@ body {
   gap: 20px;
 }
 
-.navigation a {
+.navigation a:not(.btn-logout) {
   color: #f9f9f9;
   text-decoration: none;
   font-weight: 500;
@@ -77,6 +93,20 @@ body {
 
 .navigation a:hover {
   opacity: 0.8;
+}
+
+
+.btn-logout {
+  background: #ff4d4f;
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  text-decoration: none;
+  line-height: normal;
+  font-size: 0.8rem;
 }
 
 .fade-enter-active,
