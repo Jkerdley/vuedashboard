@@ -39,7 +39,15 @@ export const useTasksStore = defineStore('tasks', () => {
     }
   }
 
-  return { tasks, tasksTotal, addTask, deleteTask }
+  const updateValue = (id, title, description) => {
+    const task = tasks.value.find((task) => task.id === id)
+    if (task) {
+      task.title = title
+      task.description = description
+    }
+  }
+
+  return { tasks, tasksTotal, addTask, deleteTask, updateValue }
 })
 
 if (import.meta.hot) {

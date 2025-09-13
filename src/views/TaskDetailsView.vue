@@ -1,5 +1,6 @@
 <script setup>
 import { useTasksStore } from '@/stores/tasks'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const props = defineProps({
@@ -17,18 +18,41 @@ if (!task) {
   router.replace('/404')
 }
 
+const newTitle = ref(task.title)
+const newDescription = ref(task.description)
+
 const deleteTask = () => {
   tasksStore.deleteTask(task.id)
   router.push('/tasks')
+}
+
+const isEditing = ref(false)
+const saveTask = () => {
+  if (newTitle.value && newDescription.value) {
+    tasksStore.updateValue(task.id, newTitle.value, newDescription.value)
+    isEditing.value = false
+  }
 }
 </script>
 
 <template>
   <div v-if="task">
-    <div>
+    <form v-if="isEditing" @submit.prevent="saveTask">
+      <input v-model="newTitle" type="text" name="title" class="form-control" />
+      <textarea
+        v-model="newDescription"
+        name="description"
+        id="description"
+        class="form-control"
+      ></textarea>
+      <button @click="isEditing = false" class="btn btn--edit" type="button">Отмена</button>
+      &nbsp;
+      <button class="btn btn--edit" type="submit">Сохранить</button>
+    </form>
+    <div v-else>
       <h1>Задача {{ task.title }}</h1>
       <p>Детали задачи #{{ task.description }}</p>
-      <button class="btn btn--edit">Редактировать</button>
+      <button @click="isEditing = true" class="btn btn--edit">Редактировать</button>
       &nbsp;
       <button @click="deleteTask" class="btn btn--delete">Удалить</button>
     </div>
