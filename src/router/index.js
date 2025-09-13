@@ -59,7 +59,6 @@ const router = createRouter({
   linkExactActiveClass: 'router-link--active',
 })
 
-// Навигационный guard
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth && !isLoggedIn.value) {
     next('/login')
